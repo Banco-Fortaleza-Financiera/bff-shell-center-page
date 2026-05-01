@@ -1,0 +1,10 @@
+[
+  {
+    "name": "bffMfaUsers",
+    "remoteEntry": "http://localhost:4201/remoteEntry.js",
+    "exposedModule": "./UsersListComponent",
+    "componentName": "UsersListComponent",
+    "fallbackExposedModule": "./UsersModule",
+    "path": "users"
+  }
+]
