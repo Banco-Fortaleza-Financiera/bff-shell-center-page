@@ -25,7 +25,7 @@ describe('App', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.shell__brand-text')?.textContent).toContain(
-      'BFF - Shell Center Page'
+      'BFF - Center Page'
     );
   });
 });

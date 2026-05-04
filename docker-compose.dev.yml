@@ -7,9 +7,25 @@ services:
     depends_on:
       bff-mfa-users:
         condition: service_started
+      bff-mfa-accounts:
+        condition: service_started
+      bff-mfa-transactions:
+        condition: service_started
 
   bff-mfa-users:
     image: bff-mfa-users:local
     container_name: bff-mfa-users
+    expose:
+      - "80"
+
+  bff-mfa-accounts:
+    image: bff-mfa-accounts:local
+    container_name: bff-mfa-accounts
+    expose:
+      - "80"
+  
+  bff-mfa-transactions:
+    image: bff-mfa-transactions:local
+    container_name: bff-mfa-transactions
     expose:
       - "80"

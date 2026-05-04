@@ -1,13 +1,14 @@
 import {
     Component,
-    ViewContainerRef,
     OnInit,
     Type,
     signal,
     inject,
+    DestroyRef,
 } from '@angular/core';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MicroFrontendConfig } from '../../interfaces/micro-frontend-config.interface';
 import { MicroFrontendService } from '../../services/micro-frontend.service';
 
@@ -26,24 +27,32 @@ export class DashboardComponent implements OnInit {
 
     mfService: MicroFrontendService = inject(MicroFrontendService);
     route: ActivatedRoute = inject(ActivatedRoute);
-    viewContainer: ViewContainerRef = inject(ViewContainerRef);
+    destroyRef: DestroyRef = inject(DestroyRef);
     component = signal<Type<any> | null>(null);
     loading = signal(true);
     error = signal<string | null>(null);
+    private currentLoadId = 0;
 
 
     ngOnInit() {
-        this.loadRemoteComponent();
+        this.route.data
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((data) => {
+                const mfConfig = data['mfConfig'] as MicroFrontendConfig | undefined;
+
+                void this.loadRemoteComponent(mfConfig);
+            });
     }
 
-    private async loadRemoteComponent() {
+    private async loadRemoteComponent(mfConfig?: MicroFrontendConfig) {
+        const loadId = ++this.currentLoadId;
+
         try {
             this.loading.set(true);
             this.error.set(null);
+            this.component.set(null);
 
             // Obtener parámetros de la ruta
-            const mfConfig = this.route.snapshot.data['mfConfig'] as MicroFrontendConfig | undefined;
-
             if (!mfConfig) {
                 throw new Error('Configuración de micro frontend no encontrada');
             }
@@ -54,13 +63,23 @@ export class DashboardComponent implements OnInit {
 
             const RemoteComponent = await this.loadComponentWithFallback(mfConfig);
 
+            if (loadId !== this.currentLoadId) {
+                return;
+            }
+
             this.component.set(RemoteComponent);
         } catch (err) {
+            if (loadId !== this.currentLoadId) {
+                return;
+            }
+
             const errorMessage = err instanceof Error ? err.message : String(err);
             this.error.set(errorMessage);
             console.error('Error en MicroFrontendHostComponent:', err);
         } finally {
-            this.loading.set(false);
+            if (loadId === this.currentLoadId) {
+                this.loading.set(false);
+            }
         }
     }
 

@@ -1,13 +1,13 @@
 <div class="micro-frontend-container">
-      @if (component(); as comp) {
-        <ng-container *ngComponentOutlet="comp"></ng-container>
-      } @else if (loading()) {
-        <div class="loading">
-          <p>Cargando módulo...</p>
-        </div>
-      } @else if (error()) {
-        <div class="error">
-          <p>Error al cargar el módulo: {{ error() }}</p>
-        </div>
-      }
+  @if (loading()) {
+    <div class="loading">
+      <p>Cargando modulo...</p>
+    </div>
+  } @else if (component(); as comp) {
+    <ng-container *ngComponentOutlet="comp"></ng-container>
+  } @else if (error()) {
+    <div class="error">
+      <p>Error al cargar el modulo: {{ error() }}</p>
+    </div>
+  }
 </div>

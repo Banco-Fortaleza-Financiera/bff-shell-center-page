@@ -6,5 +6,21 @@
     "exposedModule": "./UsersModule",
     "componentName": "UsersListComponent",
     "path": "users"
+  },
+  {
+    "name": "bffMfaAccounts",
+    "displayName": "Cuentas",
+    "remoteEntry": "/mfa/accounts/remoteEntry.js",
+    "exposedModule": "./AccountsModule",
+    "componentName": "AccountsListComponent",
+    "path": "accounts"
+  },
+  {
+    "name": "bffMfaTransactions",
+    "displayName": "Transacciones",
+    "remoteEntry": "/mfa/transactions/remoteEntry.js",
+    "exposedModule": "./TransactionsModule",
+    "componentName": "TransactionsListComponent",
+    "path": "transactions"
   }
 ]
