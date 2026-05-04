@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 import { DashboardComponent } from './dashboard.component';
 import { MicroFrontendService } from '../../services/micro-frontend.service';
 
@@ -9,6 +10,7 @@ describe('DashboardComponent', () => {
     };
 
     beforeEach(async () => {
+        microFrontendServiceMock.loadComponent.mockReset();
         microFrontendServiceMock.loadComponent.mockResolvedValue(class RemoteComponent {});
 
         await TestBed.configureTestingModule({
@@ -17,15 +19,13 @@ describe('DashboardComponent', () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        snapshot: {
-                            data: {
-                                mfConfig: {
-                                    name: 'remote-app',
-                                    exposedModule: './Module',
-                                    componentName: 'RemoteComponent',
-                                },
+                        data: of({
+                            mfConfig: {
+                                name: 'remote-app',
+                                exposedModule: './Module',
+                                componentName: 'RemoteComponent',
                             },
-                        },
+                        }),
                     },
                 },
                 {
