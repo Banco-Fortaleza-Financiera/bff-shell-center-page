@@ -62,6 +62,18 @@ describe('MicroFrontendService', () => {
     expect(result).toBe(UsersListComponent);
   });
 
+  it('should fail when the remote component does not exist in the module', async () => {
+    jest.spyOn(service, 'loadModule').mockResolvedValue({});
+
+    await expect(
+      service.loadComponent(
+        'bffMfaUsers',
+        './UsersListComponent',
+        'UsersListComponent'
+      )
+    ).rejects.toThrow('El componente UsersListComponent no existe');
+  });
+
   it('should rethrow errors when the remote component cannot be loaded', async () => {
     const error = new Error('component unavailable');
     jest.spyOn(service, 'loadModule').mockRejectedValue(error);
