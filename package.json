@@ -1,0 +1,52 @@
+{
+  "name": "bff-shell-center-page",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --configuration local",
+    "start:local": "ng serve --configuration local",
+    "start:dev": "ng serve --configuration dev",
+    "start:test": "ng serve --configuration test",
+    "start:prod": "ng serve --configuration production",
+    "build": "ng build",
+    "build:local": "ng build --configuration local",
+    "build:dev": "ng build --configuration dev",
+    "build:test": "ng build --configuration test",
+    "build:prod": "ng build --configuration production",
+    "watch": "ng build --watch --configuration local",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --ci --runInBand",
+    "test:ci:coverage": "jest --ci --runInBand --coverage",
+    "test:coverage": "jest --coverage",
+    "prepare": "husky"
+  },
+  "private": true,
+  "packageManager": "npm@11.5.1",
+  "dependencies": {
+    "@angular-architects/module-federation": "^21.0.0",
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "^0.16.1"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.1",
+    "@angular/cli": "^21.2.1",
+    "@angular/compiler-cli": "^21.2.0",
+    "@types/jest": "^30.0.0",
+    "husky": "^9.1.7",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "jest-preset-angular": "^16.1.4",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}

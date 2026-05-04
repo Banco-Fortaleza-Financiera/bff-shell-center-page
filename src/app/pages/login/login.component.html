@@ -1,0 +1,60 @@
+<section class="login">
+  <div class="login__shell">
+    <div class="login__brand">
+      <img src="/assets/img/logo.png" alt="Banco Fortaleza Financiera" class="login__brand-logo" />
+      <div class="login__brand-content">
+        <h2 class="login__brand-title">Banco Fortaleza Financiera</h2>
+      </div>
+    </div>
+
+    <form class="login__card" [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+      <div class="login__heading">
+        <p class="login__eyebrow">Acceso seguro</p>
+        <h1 class="login__title">Iniciar sesión</h1>
+      </div>
+
+      <label class="login__field">
+        <span class="login__label">Usuario</span>
+        <input
+          class="login__input"
+          type="text"
+          inputmode="numeric"
+          formControlName="idUser"
+          autocomplete="username"
+          placeholder="Ingresa tu usuario"
+        />
+      </label>
+      @if (hasError('idUser', 'required')) {
+        <p class="login__field-error">El usuario es requerido.</p>
+      }
+      @if (hasError('idUser', 'min')) {
+        <p class="login__field-error">Ingresa un usuario válido.</p>
+      }
+
+      <label class="login__field">
+        <span class="login__label">Contraseña</span>
+        <input
+          class="login__input"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="Ingresa tu contraseña"
+        />
+      </label>
+      @if (hasError('password', 'required')) {
+        <p class="login__field-error">La contraseña es requerida.</p>
+      }
+      @if (hasError('password', 'minlength')) {
+        <p class="login__field-error">La contraseña debe tener al menos 8 caracteres.</p>
+      }
+
+      @if (errorMessage()) {
+        <p class="login__error">{{ errorMessage() }}</p>
+      }
+
+      <button class="login__submit" type="submit" [disabled]="loginForm.invalid || isSubmitting()">
+        {{ isSubmitting() ? 'Validando...' : 'Ingresar' }}
+      </button>
+    </form>
+  </div>
+</section>
