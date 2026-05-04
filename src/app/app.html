@@ -5,6 +5,10 @@
         <img src="/assets/img/logo.png" alt="Banco Fortaleza Financiera" class="shell__logo" />
         <span class="shell__brand-text">{{ title() }}</span>
       </a>
+
+      @if (isAuthenticated()) {
+        <button class="shell__logout" type="button" (click)="logout()">Cerrar sesion</button>
+      }
     </div>
   </header>
 

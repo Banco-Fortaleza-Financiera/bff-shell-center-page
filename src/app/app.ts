@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { getMicroFrontends } from './config/micro-frontend-routes';
 import { MicroFrontendConfig } from './interfaces/micro-frontend-config.interface';
 import { AuthService } from './services/auth.service';
@@ -12,6 +12,7 @@ import { AuthService } from './services/auth.service';
 })
 export class App {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   protected readonly title = signal('BFF - Center Page');
 
@@ -21,5 +22,10 @@ export class App {
 
   protected microFrontends(): MicroFrontendConfig[] {
     return getMicroFrontends();
+  }
+
+  protected logout(): void {
+    this.authService.logout();
+    void this.router.navigateByUrl('/login');
   }
 }

@@ -31,6 +31,30 @@
   width: 100%;
 }
 
+.shell__logout {
+  background: var(--primary);
+  border: 0;
+  border-radius: 6px;
+  color: var(--white);
+  cursor: pointer;
+  flex: 0 0 auto;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  margin-left: auto;
+  min-height: 40px;
+  padding: 0 16px;
+}
+
+.shell__logout:hover {
+  background: var(--primary-light);
+}
+
+.shell__logout:focus-visible {
+  outline: 3px solid rgba(212, 175, 55, 0.55);
+  outline-offset: 2px;
+}
+
 .shell__brand {
   align-items: center;
   color: var(--primary);
@@ -136,6 +160,12 @@
     max-width: min(70vw, 260px);
   }
 
+  .shell__logout {
+    font-size: 13px;
+    min-height: 36px;
+    padding: 0 12px;
+  }
+
   .shell__workspace--with-sidebar {
     flex-direction: column;
   }
@@ -175,7 +205,11 @@
 
 @media (max-width: 380px) {
   .shell__brand-text {
-    max-width: 210px;
+    max-width: 150px;
+  }
+
+  .shell__logout {
+    padding: 0 10px;
   }
 
   .shell__footer {
