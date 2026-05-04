@@ -4,9 +4,9 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { initFederation } from '@angular-architects/module-federation-runtime/enhanced';
-import type { ManifestFile } from '@angular-architects/module-federation-runtime/enhanced';
 import type { UserOptions } from '@module-federation/runtime-core';
 import * as AngularCommon from '@angular/common';
 import * as AngularCompiler from '@angular/compiler';
@@ -16,18 +16,10 @@ import * as AngularRouter from '@angular/router';
 import * as RxJS from 'rxjs';
 
 import { routes } from './app.routes';
-import { MICRO_FRONTENDS } from './config/micro-frontend-routes';
-
-const mfManifest: ManifestFile = Object.fromEntries(
-  MICRO_FRONTENDS.map((mf) => [
-    mf.name,
-    {
-      name: mf.name,
-      type: 'module',
-      remoteEntry: mf.remoteEntry,
-    },
-  ])
-);
+import {
+  buildMicroFrontendManifest,
+  loadMicroFrontendRoutes,
+} from './config/micro-frontend-routes';
 
 const sharedRuntimeOptions = {
   shared: {
@@ -52,11 +44,14 @@ const sharedRuntimeOptions = {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideAppInitializer(() =>
-      initFederation(mfManifest, {
+    provideHttpClient(),
+    provideAppInitializer(async () => {
+      await loadMicroFrontendRoutes();
+
+      return initFederation(buildMicroFrontendManifest(), {
         runtimeOptions: sharedRuntimeOptions as UserOptions,
-      })
-    ),
+      });
+    }),
     provideRouter(routes),
   ],
 };

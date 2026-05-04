@@ -1,5 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { getMicroFrontends } from './config/micro-frontend-routes';
+import { MicroFrontendConfig } from './interfaces/micro-frontend-config.interface';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +11,15 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('BFF - Shell Center Page');
+  private readonly authService = inject(AuthService);
+
+  protected readonly title = signal('BFF - Center Page');
+
+  protected isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  protected microFrontends(): MicroFrontendConfig[] {
+    return getMicroFrontends();
+  }
 }

@@ -1,0 +1,10 @@
+[
+  {
+    "name": "bffMfaUsers",
+    "displayName": "Usuarios",
+    "remoteEntry": "/mfa/users/remoteEntry.js",
+    "exposedModule": "./UsersModule",
+    "componentName": "UsersListComponent",
+    "path": "users"
+  }
+]

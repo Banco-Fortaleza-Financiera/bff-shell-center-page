@@ -1,16 +1,37 @@
-<header class="app-header">
-  <div class="container">
-    <h1>{{ title() }}</h1>
-    <nav class="app-nav">
-      <a routerLink="/users" routerLinkActive="active"> Usuarios </a>
-    </nav>
+<div class="shell">
+  <header class="shell__header">
+    <div class="shell__bar">
+      <a class="shell__brand" routerLink="/">
+        <img src="/assets/img/logo.png" alt="Banco Fortaleza Financiera" class="shell__logo" />
+        <span class="shell__brand-text">{{ title() }}</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="shell__workspace" [class.shell__workspace--with-sidebar]="isAuthenticated()">
+    @if (isAuthenticated()) {
+      <aside class="shell__sidebar">
+        <nav class="shell__nav" aria-label="Navegación principal">
+          @for (mf of microFrontends(); track mf.path) {
+            <a
+              class="shell__nav-link"
+              [routerLink]="['/', mf.path]"
+              routerLinkActive="shell__nav-link--active"
+            >
+              {{ mf.displayName }}
+            </a>
+          }
+        </nav>
+      </aside>
+    }
+
+    <main class="shell__main">
+      <router-outlet></router-outlet>
+    </main>
   </div>
-</header>
 
-<main class="app-main">
-  <router-outlet></router-outlet>
-</main>
-
-<footer class="app-footer">
-  <p>&copy; 2026 Banco Fortaleza Financiera - Shell Center Page</p>
-</footer>
+  <footer class="shell__footer">
+    <span>Banco Fortaleza Financiera</span>
+    <span>Shell Center Page</span>
+  </footer>
+</div>

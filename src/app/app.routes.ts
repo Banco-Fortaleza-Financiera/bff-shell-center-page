@@ -1,43 +1,43 @@
 import { Routes } from '@angular/router';
-import { loadRemoteModule } from '@angular-architects/module-federation-runtime/enhanced';
-import { MICRO_FRONTENDS } from './config/micro-frontend-routes';
 
-type MicroFrontend = (typeof MICRO_FRONTENDS)[number];
+import { defaultMicroFrontendGuard } from './guards/default-micro-frontend.guard';
+import { authGuard } from './guards/auth.guard';
+import { microFrontendMatchGuard } from './guards/micro-frontend-match.guard';
+import { microFrontendConfigResolver } from './resolvers/micro-frontend-config.resolver';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'users',
-    pathMatch: 'full',
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login/login.component').then((component) => component.LoginComponent),
   },
-  ...MICRO_FRONTENDS.map((mf) => ({
-    path: mf.path,
-    loadComponent: () => loadMicroFrontendComponent(mf),
-  })),
+  {
+    path: '',
+    pathMatch: 'full',
+    canActivate: [defaultMicroFrontendGuard],
+    loadComponent: () =>
+      import('./layouts/dashboard/dashboard.component').then(
+        (component) => component.DashboardComponent
+      ),
+  },
+  {
+    path: ':microFrontendPath',
+    canMatch: [microFrontendMatchGuard],
+    canActivate: [authGuard],
+    resolve: {
+      mfConfig: microFrontendConfigResolver,
+    },
+    loadComponent: () =>
+      import('./layouts/dashboard/dashboard.component').then(
+        (component) => component.DashboardComponent
+      ),
+  },
   {
     path: '**',
-    redirectTo: 'users',
+    canActivate: [defaultMicroFrontendGuard],
+    loadComponent: () =>
+      import('./layouts/dashboard/dashboard.component').then(
+        (component) => component.DashboardComponent
+      ),
   },
 ];
-
-async function loadMicroFrontendComponent(mf: MicroFrontend) {
-  try {
-    const remote = await loadRemoteModule({
-      remoteName: mf.name,
-      exposedModule: mf.exposedModule,
-    });
-
-    return remote[mf.componentName];
-  } catch (error) {
-    if (!mf.fallbackExposedModule) {
-      throw error;
-    }
-
-    const remote = await loadRemoteModule({
-      remoteName: mf.name,
-      exposedModule: mf.fallbackExposedModule,
-    });
-
-    return remote[mf.componentName];
-  }
-}

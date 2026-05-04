@@ -1,5 +1,6 @@
 export interface MicroFrontendConfig {
   name: string;
+  displayName: string;
   remoteEntry: string;
   exposedModule: string;
   componentName: string;

@@ -1,0 +1,15 @@
+services:
+  bff-shell-center-page:
+    image: bff-shell-center-page:local
+    container_name: bff-shell-center-page
+    ports:
+      - "4200:80"
+    depends_on:
+      bff-mfa-users:
+        condition: service_started
+
+  bff-mfa-users:
+    image: bff-mfa-users:local
+    container_name: bff-mfa-users
+    expose:
+      - "80"

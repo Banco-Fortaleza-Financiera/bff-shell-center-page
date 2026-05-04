@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { loadRemoteModule } from '@angular-architects/module-federation-runtime/enhanced';
 
 @Injectable({
@@ -24,10 +24,16 @@ export class MicroFrontendService {
     remoteName: string,
     exposedModule: string,
     componentName: string
-  ) {
+  ): Promise<Type<unknown>> {
     try {
       const module = await this.loadModule(remoteName, exposedModule);
-      return module[componentName];
+      const component = module[componentName] as Type<unknown> | undefined;
+
+      if (!component) {
+        throw new Error(`El componente ${componentName} no existe en ${exposedModule}`);
+      }
+
+      return component;
     } catch (error) {
       console.error(
         `Error cargando componente: ${componentName} desde ${remoteName}`,

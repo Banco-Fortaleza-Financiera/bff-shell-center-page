@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { MicroFrontendConfig } from '../../interfaces/micro-frontend-config.interface';
 import { MicroFrontendService } from '../../services/micro-frontend.service';
 
 /**
@@ -41,7 +42,7 @@ export class DashboardComponent implements OnInit {
             this.error.set(null);
 
             // Obtener parámetros de la ruta
-            const mfConfig = this.route.snapshot.data['mfConfig'];
+            const mfConfig = this.route.snapshot.data['mfConfig'] as MicroFrontendConfig | undefined;
 
             if (!mfConfig) {
                 throw new Error('Configuración de micro frontend no encontrada');
@@ -51,12 +52,7 @@ export class DashboardComponent implements OnInit {
                 throw new Error('Nombre de componente remoto no encontrado');
             }
 
-            // Cargar el componente remoto
-            const RemoteComponent = await this.mfService.loadComponent(
-                mfConfig.name,
-                mfConfig.exposedModule,
-                mfConfig.componentName
-            );
+            const RemoteComponent = await this.loadComponentWithFallback(mfConfig);
 
             this.component.set(RemoteComponent);
         } catch (err) {
@@ -65,6 +61,26 @@ export class DashboardComponent implements OnInit {
             console.error('Error en MicroFrontendHostComponent:', err);
         } finally {
             this.loading.set(false);
+        }
+    }
+
+    private async loadComponentWithFallback(mfConfig: MicroFrontendConfig) {
+        try {
+            return await this.mfService.loadComponent(
+                mfConfig.name,
+                mfConfig.exposedModule,
+                mfConfig.componentName
+            );
+        } catch (error) {
+            if (!mfConfig.fallbackExposedModule) {
+                throw error;
+            }
+
+            return this.mfService.loadComponent(
+                mfConfig.name,
+                mfConfig.fallbackExposedModule,
+                mfConfig.componentName
+            );
         }
     }
 }
